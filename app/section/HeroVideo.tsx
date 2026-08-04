@@ -8,9 +8,14 @@ import Logo from "../components/Logo";
 export default function HeroVideo() {
   return (
     <section className="relative isolate flex min-h-screen items-end overflow-hidden bg-slate-950">
-      <Link href="/" className="flex items-center" aria-label="Karsa home">
-        <Logo variant={isScrolled ? "dark" : "light"} />
-      </Link>
+      <Image
+        src="/grandma.jpeg"
+        width="1920"
+        height="1080"
+        alt=""
+        priority
+        className="absolute inset-0 -z-20 h-full w-full object-cover"
+      />
 
       <div className="absolute inset-0 -z-10 bg-linear-to-t from-slate-950 via-slate-950/60 to-slate-950/10" />
       <div className="absolute inset-0 -z-10 bg-slate-950/15" />
@@ -28,8 +33,8 @@ export default function HeroVideo() {
         </Link>
 
         <h1 className="mt-6 max-w-xl font-serif text-4xl font-medium leading-[1.1] tracking-tight text-white sm:max-w-2xl sm:text-5xl lg:max-w-3xl lg:text-6xl">
-          Karsa untuk <em className="italic text-amber-300">kehidupan</em> yang
-          lebih baik.
+          Karsa untuk <em className="italic text-amber-300">kehidupan</em>{" "}
+          yang lebih baik.
         </h1>
 
         <p className="mt-6 max-w-xl text-lg leading-8 text-slate-200">
