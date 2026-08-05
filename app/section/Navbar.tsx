@@ -49,14 +49,14 @@ export default function Navbar() {
           className="flex items-center gap-2.5"
           aria-label="Fiscus home"
         >
-          <Image
-            src="/logo-right.png"
-            alt="Fiscus Multifinance System"
-            width={205}
-            height={57}
-            priority
-            className={`w-auto object-contain transition-all duration-300 ${isScrolled ? "h-16" : "h-20"}`}
-          />
+<Image
+  src={isScrolled ? "/logo-right.png" : "/logo-right-white.png"}
+  alt="Karsa"
+  width={205}
+  height={57}
+  priority
+  className={`w-auto object-contain transition-all duration-300 ${isScrolled ? "h-16" : "h-20"}`}
+/>
         </Link>
 
         <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 lg:flex">
