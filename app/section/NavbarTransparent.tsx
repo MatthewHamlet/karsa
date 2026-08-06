@@ -1,19 +1,13 @@
 "use client";
 
-// import Button from "@/components/Button";
-import ServicesMegaMenu from "@/app/section/ServicesMegaMenu";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function NavbarTransparent() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
-  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const updateScrollState = () => setIsScrolled(window.scrollY > 24);
@@ -22,202 +16,96 @@ export default function NavbarTransparent() {
     return () => window.removeEventListener("scroll", updateScrollState);
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (closeTimeout.current) clearTimeout(closeTimeout.current);
-    };
-  }, []);
-
-  const openServices = () => {
-    if (closeTimeout.current) clearTimeout(closeTimeout.current);
-    setIsServicesOpen(true);
-  };
-
-  const scheduleCloseServices = () => {
-    closeTimeout.current = setTimeout(() => setIsServicesOpen(false), 150);
-  };
+  const navItems = ["Home", "Features", "How It Works", "Mascot", "Community", "FAQ"];
 
   return (
-    <header className="relative z-50 h-0">
+    <header className="fixed top-0 left-0 right-0 z-50">
       <motion.nav
-        layout
-        transition={{ type: "spring", stiffness: 330, damping: 30, mass: 0.7 }}
-        className={`fixed inset-x-3 top-3 mx-auto flex items-center justify-between sm:inset-x-5 lg:inset-x-8 ${isScrolled ? "h-14 max-w-5xl rounded-full border border-white/70 bg-white/65 px-4 shadow-lg shadow-slate-950/10 backdrop-blur-2xl sm:px-5" : "h-17 max-w-7xl px-2 sm:px-0"}`}
+        initial={false}
+        animate={{
+          width: isScrolled ? "auto" : "100%",
+          maxWidth: isScrolled ? "64rem" : "80rem",
+          marginTop: isScrolled ? "1rem" : "0",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className={`fixed inset-x-0 top-0 mx-auto flex items-center justify-between px-6 sm:px-8 lg:px-12 ${
+          isScrolled 
+            ? "h-16 rounded-full border border-white/30 bg-white/70 backdrop-blur-xl shadow-lg shadow-slate-950/5" 
+            : "h-20 bg-transparent"
+        }`}
+        style={{ left: "50%", transform: "translateX(-50%)" }} // Center fixed nav
       >
-        <Link
-          href="/"
-          className="flex items-center gap-2.5"
-          aria-label="Fiscus home"
-        >
-<Image
-  src="/logo-right.png"
-  alt="Karsa"
-  width={205}
-  height={57}
-  priority
-  className={`w-auto object-contain transition-all duration-300 ${isScrolled ? "h-16 brightness-0 invert" : "h-20"}`}
-/>
+        <Link href="/" className="flex items-center gap-2 z-50">
+          <span className={`text-xl font-serif font-bold transition-colors ${isScrolled ? "text-slate-900" : "text-white"}`}>
+            Karsa
+          </span>
         </Link>
 
-        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 lg:flex">
-          <Link
-            href="/about"
-            className={`flex items-center text-sm font-medium transition ${isScrolled ? "text-slate-600 hover:text-blue-600" : "text-white/90 hover:text-white"}`}
-          >
-            About
-          </Link>
-
-          <div
-            className="relative flex items-center"
-            onMouseEnter={openServices}
-            onMouseLeave={scheduleCloseServices}
-          >
-            <button
-              type="button"
-              onClick={() => setIsServicesOpen((prev) => !prev)}
-              aria-expanded={isServicesOpen}
-              className={`flex items-center gap-1 text-sm font-medium transition ${isScrolled ? "text-slate-600 hover:text-blue-600" : "text-white/90 hover:text-white"}`}
+        {/* Desktop Menu */}
+        <div className="hidden items-center gap-8 lg:flex absolute left-1/2 -translate-x-1/2">
+          {navItems.map((item) => (
+            <Link
+              key={item}
+              href={item === "Mascot" ? "/mascot" : `#${item.toLowerCase().replace(/\s/g, "-")}`}
+              className={`text-sm font-medium transition-colors ${
+                isScrolled ? "text-slate-700 hover:text-slate-900" : "text-white hover:text-gray-300"
+              }`}
             >
-              Services
-              <motion.span
-                animate={{ rotate: isServicesOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-                className="flex items-center"
-              >
-                <ChevronDown size={15} />
-              </motion.span>
-            </button>
+              {item}
+            </Link>
+          ))}
+        </div>
 
-            <AnimatePresence>
-              {isServicesOpen && (
-                <ServicesMegaMenu onNavigate={() => setIsServicesOpen(false)} />
-              )}
-            </AnimatePresence>
-          </div>
-
-          <Link
-            href="/pricing"
-            className={`flex items-center text-sm font-medium transition ${isScrolled ? "text-slate-600 hover:text-blue-600" : "text-white/90 hover:text-white"}`}
-          >
-            Pricing
+        {/* Right Side CTAs */}
+        <div className="hidden items-center gap-4 lg:flex">
+          <Link href="#" className={`text-sm font-medium transition-colors ${isScrolled ? "text-slate-600 hover:text-slate-900" : "text-slate-700 hover:text-slate-900"}`}>
+            Sign In
           </Link>
-
           <Link
-            href="/blog"
-            className={`flex items-center text-sm font-medium transition ${isScrolled ? "text-slate-600 hover:text-blue-600" : "text-white/90 hover:text-white"}`}
+            href="#"
+            className="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700"
           >
-            Blog
-          </Link>
-
-          <Link
-            href="/contact"
-            className={`flex items-center text-sm font-medium transition ${isScrolled ? "text-slate-600 hover:text-blue-600" : "text-white/90 hover:text-white"}`}
-          >
-            Contact Us
+            Get Started
           </Link>
         </div>
 
-        {/* <div className="flex items-center gap-3">
-          <Button
-            variant="primary"
-            size="sm"
-            href="https://wa.me/6282211581769"
-            className="hidden sm:inline-flex"
-          >
-            Book a demo
-          </Button>
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen((open) => !open)}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isMobileMenuOpen}
-            className={`grid size-10 place-items-center rounded-full border transition lg:hidden ${isScrolled ? "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-600" : "border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20"}`}
-          >
-            {isMobileMenuOpen ? <X size={19} /> : <Menu size={19} />}
-          </button>
-        </div> */}
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="grid h-10 w-10 place-items-center rounded-full bg-slate-900/5 text-slate-900 lg:hidden"
+        >
+          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </motion.nav>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -12 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed inset-x-3 top-19 z-40 rounded-3xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-950/10 sm:inset-x-5 lg:hidden"
+            exit={{ opacity: 0, y: -10 }}
+            className="fixed inset-x-4 top-24 z-40 rounded-3xl border border-slate-200 bg-white p-6 shadow-xl lg:hidden"
           >
-            <div className="flex flex-col gap-1">
-              <Link
-                href="/about"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-xl px-3 py-3 text-base font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-600"
-              >
-                About
-              </Link>
-
-              <button
-                type="button"
-                onClick={() => setIsMobileServicesOpen((open) => !open)}
-                aria-expanded={isMobileServicesOpen}
-                className="flex items-center justify-between rounded-xl px-3 py-3 text-base font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-600"
-              >
-                Services
-                <motion.span
-                  animate={{ rotate: isMobileServicesOpen ? 180 : 0 }}
-                  transition={{ duration: 0.2 }}
+            <div className="flex flex-col gap-4">
+              {navItems.map((item) => (
+                <Link
+                  key={item}
+                  href={item === "Mascot" ? "/mascot" : `#${item.toLowerCase().replace(/\s/g, "-")}`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-base font-medium text-slate-700"
                 >
-                  <ChevronDown size={17} />
-                </motion.span>
-              </button>
-              <AnimatePresence initial={false}>
-                {isMobileServicesOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2, ease: "easeInOut" }}
-                    className="overflow-hidden pl-3"
-                  >
-                    {[
-                      "Fiscus Core System",
-                      "Fiscus Collection",
-                      "Fiscus Survey",
-                      "SLIK Reporting",
-                      "SILARAS Reporting",
-                    ].map((service) => (
-                      <p
-                        key={service}
-                        className="px-3 py-2.5 text-sm text-slate-500"
-                      >
-                        {service}
-                      </p>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <Link
-                href="/pricing"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-xl px-3 py-3 text-base font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-600"
-              >
-                Pricing
-              </Link>
-              <Link
-                href="/blog"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-xl px-3 py-3 text-base font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-600"
-              >
-                Blog
-              </Link>
-              <Link
-                href="/contact"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-xl px-3 py-3 text-base font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-600"
-              >
-                Contact Us
-              </Link>
+                  {item}
+                </Link>
+              ))}
+              <div className="mt-4 flex flex-col gap-3 border-t border-slate-100 pt-4">
+                <Link href="#" className="text-base font-medium text-slate-700">Sign In</Link>
+                <Link href="#" className="rounded-full bg-slate-900 px-5 py-3 text-center text-sm font-semibold text-white">
+                  Get Started
+                </Link>
+              </div>
             </div>
           </motion.div>
         )}
