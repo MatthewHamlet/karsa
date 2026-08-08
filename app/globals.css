@@ -1,27 +1,115 @@
 @import "tailwindcss";
 
+/*
+  KARSA DESIGN SYSTEM
+  Palette ala referensi: hijau hutan pekat + lime terang + mint pucat + butter kuning.
+  Semua warna diexpose sebagai token Tailwind v4 -> bg-karsa-lime, text-karsa-green, dst.
+*/
+@theme {
+  --color-karsa-ink: #0b3d1e;
+  --color-karsa-deep: #0d5a29;
+  --color-karsa-green: #1b7a3c;
+  --color-karsa-leaf: #3f9a58;
+  --color-karsa-lime: #c8f06e;
+  --color-karsa-limesoft: #dcf6a6;
+  --color-karsa-mint: #effbdc;
+  --color-karsa-butter: #f7f5a6;
+  --color-karsa-cream: #fbfad2;
+  --color-karsa-haze: #f4f5f2;
+
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-jakarta);
+  --font-mono: var(--font-geist-mono);
+}
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-fraunces);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground: var(--color-karsa-ink);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Blob organik ala avocado — dipakai buat frame foto & ornamen ikon */
+.karsa-blob {
+  border-radius: 62% 38% 46% 54% / 54% 46% 54% 46%;
+}
+
+.karsa-blob-alt {
+  border-radius: 42% 58% 63% 37% / 47% 58% 42% 53%;
+}
+
+/* Marquee: track digandakan 2x di markup, jadi geser -50% = loop mulus */
+@keyframes karsa-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.karsa-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: karsa-marquee var(--karsa-marquee-duration, 40s) linear infinite;
+  animation-direction: var(--karsa-marquee-direction, normal);
+  will-change: transform;
+}
+
+.karsa-marquee:hover .karsa-marquee-track {
+  animation-play-state: paused;
+}
+
+/* Fade kiri-kanan di ujung marquee & carousel */
+.karsa-edge-fade {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6rem,
+    #000 calc(100% - 6rem),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6rem,
+    #000 calc(100% - 6rem),
+    transparent
+  );
+}
+
+.karsa-no-scrollbar {
+  scrollbar-width: none;
+}
+
+.karsa-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .karsa-marquee-track {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: var(--color-karsa-lime);
+  color: var(--color-karsa-ink);
 }
